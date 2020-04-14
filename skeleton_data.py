@@ -4,18 +4,54 @@ import os, numpy as np, matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 
-def dirToRAD(directory):
+def dirToRAD(directory, toFile):
     """Converts a directory of pre-formatted skeleton data to single RelativeAnglesDistances format file"""
     #Open Directory
     trainFiles = [file for file in os.listdir(directory) if file.endswith(".txt")]
+    fOut = open(toFile, 'w')
     for file in trainFiles:
         print(file)
         rawData = getRawData(directory+file)
-        RADdata = rawToCust(rawData)
+        RADdata = rawToRAD(rawData)
+        #custData = rawToCust(rawData)
         #print('Raw:', rawData)
         #print('RAD:', RADdata)
-    #RADdata = RADdata[~np.isnan(RADdata)] #Ignore NaNs
-        plotRAD(RADdata, file)
+        listRAD = list(getHistogram(RADdata, file))
+        fOut.writelines(["%s " % int(elem) for elem in listRAD])
+        fOut.write('\n')
+    fOut.close()
+
+#TODO fix histograms. filter noise? get bins correct. get np.hist and plt.hist to do same thing.
+def getHistogram(arr, fName, bins=10):
+    dictJointName = {0:'Head to Hip',1:'RH-RF',2:'RF-LF',3:'LF-LH',4:'LH-Head'}
+    fNum, typeNum, dNum = np.shape(arr)
+    histArr = np.zeros((bins+bins)*dNum)
+    for t in range(typeNum):
+        #fig = plt.figure()
+        for i in range(dNum):
+            cur = arr[:,t,i]
+            cur = cur[~np.isnan(cur)]
+            #ax = fig.add_subplot(231+i)
+
+            #ax.plot(cur)
+
+            #curHist, curBins = np.histogram(cur)
+            #ax.bar(curBins[:-1], curHist, width=1)               #Uncomment to get histograms (comment line above)
+
+            #h = ax.hist(cur)
+            h = plt.hist(cur)
+            curHist = h[0]
+            curBins = h[1]
+            #if t == 0:
+            #    ax.set_title('dist: '+dictJointName[i])
+            #else:
+            #    ax.set_title('angle: '+dictJointName[i])
+            #fig.suptitle(fName)
+   #         print('CurHist'+str(i),curHist)
+            histArr[(i+dNum*t)*bins:(i+1+dNum*t)*bins] = curHist
+        #plt.show()
+   # print(histArr)
+    return histArr
 
 
 
@@ -91,31 +127,6 @@ def getRawData(fileName):
     #ax.plot(rawData[:, 1, 0], rawData[:, 1, 1], rawData[:, 1, 2])
     return rawData
 
-#TODO fix histograms. filter noise? get bins correct. get np.hist and plt.hist to do same thing.
-def plotRAD(arr, fName, bins=10):
-    dictJointName = {0:'Head to Hip',1:'RH-RF',2:'RF-LF',3:'LF-LH',4:'LH-Head'}
-    fNum, typeNum, dNum = np.shape(arr)
-    histArr = np.zeros((bins+bins)*dNum)
-    for t in range(typeNum):
-        fig = plt.figure()
-        for i in range(dNum):
-            cur = arr[:,t,i]
-            cur = cur[~np.isnan(cur)]
-            curHist, curBins = np.histogram(cur)
-            ax = fig.add_subplot(231+i)
-            ax.plot(cur)
-            #ax.bar(curBins[:-1], curHist, width=1)               #Uncomment to get histograms (comment line above)
-            if t == 0:
-                ax.set_title('dist: '+dictJointName[i])
-            else:
-                ax.set_title('angle: '+dictJointName[i])
-            fig.suptitle(fName)
-            print('CurHist'+str(i),curHist)
-            histArr[(i+dNum*t)*bins:(i+1+dNum*t)*bins] = curHist
-        plt.show()
-    print(histArr)
-
-
 
 def getFrameNumber(fileName, jointNumber):
     """Gets number of frames in a file"""
@@ -131,6 +142,6 @@ def getFrameNumber(fileName, jointNumber):
 
 
 if __name__ == '__main__':
-    dirToRAD('dataset/train/')
+    dirToRAD('dataset/train/', 'rad_d1')
     #plt.show()
 
