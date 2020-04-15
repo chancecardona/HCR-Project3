@@ -1,7 +1,8 @@
 #!/usr/bin/python
 
-import os, numpy as np, matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
+import os, numpy as np
+#import matplotlib.pyplot as plt            #Uncomment these if you have them and want more plotting features
+#from mpl_toolkits.mplot3d import Axes3D
 
 
 def dirToRAD(directory, toFile):
@@ -17,7 +18,7 @@ def dirToRAD(directory, toFile):
         #print('Raw:', rawData)
         #print('RAD:', RADdata)
         listRAD = list(getHistogram(RADdata, file))
-        fOut.writelines(["%s " % int(elem) for elem in listRAD])
+        fOut.writelines(["%s " % elem for elem in listRAD])
         fOut.write('\n')
     fOut.close()
 
@@ -33,22 +34,26 @@ def getHistogram(arr, fName, bins=10):
             cur = cur[~np.isnan(cur)]
             #ax = fig.add_subplot(231+i)
 
+            #1. use this for normal plotting
             #ax.plot(cur)
 
-            #curHist, curBins = np.histogram(cur)
-            #ax.bar(curBins[:-1], curHist, width=1)               #Uncomment to get histograms (comment line above)
+            #2. Use this for np histograms
+            curHist, curBins = np.histogram(cur)
+            #ax.bar(curBins[:-1] + np.diff(curBins)/2, curHist, np.diff(curBins))
 
+            #3. Use this for matplotlib histograms
             #h = ax.hist(cur)
-            h = plt.hist(cur)
-            curHist = h[0]
-            curBins = h[1]
+            #h = plt.hist(cur)
+            #curHist = h[0]
+            #curBins = h[1]
+
             #if t == 0:
             #    ax.set_title('dist: '+dictJointName[i])
             #else:
             #    ax.set_title('angle: '+dictJointName[i])
             #fig.suptitle(fName)
    #         print('CurHist'+str(i),curHist)
-            histArr[(i+dNum*t)*bins:(i+1+dNum*t)*bins] = curHist
+            histArr[(i+dNum*t)*bins:(i+1+dNum*t)*bins] = curHist / fNum #normalize and concatenate
         #plt.show()
    # print(histArr)
     return histArr
@@ -144,4 +149,13 @@ def getFrameNumber(fileName, jointNumber):
 if __name__ == '__main__':
     dirToRAD('dataset/train/', 'rad_d1')
     #plt.show()
+    print('Training RAD created.')
+    dirToRAD('dataset/test/', 'rad_d1.t')
+    print('Testing RAD created.')
+    dirToRAD('dataset/train/', 'cust_d1')
+    print('Training Cust created.')
+    dirToRAD('dataset/test/', 'cust_d1.y')
+    print('Testing Cust created.')
+
+
 
