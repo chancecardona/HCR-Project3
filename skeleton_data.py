@@ -13,12 +13,18 @@ def dirToRAD(directory, toFile):
     for file in trainFiles:
         print(file)
         rawData = getRawData(directory+file)
-        RADdata = rawToRAD(rawData)
-        #custData = rawToCust(rawData)
+        if 'rad' in toFile:
+            data = rawToRAD(rawData)
+        elif 'cust' in toFile:
+            data = rawToCust(rawData)
+        else:
+            print('ERROR. Transformation to ' + toFile + ' failed. Please enter a string containing cust for custom representation or rad for RAD format.')
         #print('Raw:', rawData)
         #print('RAD:', RADdata)
-        listRAD = list(getHistogram(RADdata, file))
-        fOut.writelines(["%s " % elem for elem in listRAD])
+        label = int(file[1:3])
+        enumData = enumerate(getHistogram(data, file))
+        fOut.write(str(label) + ' ')
+        fOut.writelines([" %d:%s" % (index+1, elem) for index,elem in enumData])
         fOut.write('\n')
     fOut.close()
 

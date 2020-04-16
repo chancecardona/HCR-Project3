@@ -8,5 +8,6 @@ bin/
 lib/
 msg_gen/
 srv_gen/
+libsvm-3.24/
 *.pyc
 *~
