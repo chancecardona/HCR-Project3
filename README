@@ -1,11 +1,29 @@
 Code created by Chance Cardona.
-To run code simply type:
-    python3 skeleton_data.py
+To crease LIBSVM compatable data simply type:
+    python3 skeleton_repr.py <optional bin number>
+also you can optionally enter your number of bins. The default is 15. The best results have been found with
+    python3 skeleton_repr.py 20
 
-The code should take care of the rest and use the training data directory provided
-in this package to generate rad_d1, rad_d1.t, cust_d1, and cust_d1.t frequency data
-in space separated format. Note python will generate empty files. Must run as python3.
-All histograms are generated with numpy's histogram with default
-settings. The cust format returns a 2x5 matrix for each sample as well, but measures
+Next, to fit the SVM's run
+    python fit_svm.py
+
+The skeleton_repr.py should take care of the rest needed and use the training data directory provided 
+in this package to generate rad_d2, rad_d2.t, cust_d2, and cust_d2.t frequency data
+in LIBSVM format. Note running as 'python' will generate empty files. Must run as python3.
+All histograms are generated with numpy's histogram with the bin number specified. 
+
+The cust format returns a 2x5 matrix for each sample as well, but measures
 different distances and angles I figured would be helpful such as hand to hand
 angle/distance, and extremety distance/angle relative to knees/elbows and hip/shoulder.
+
+The fit_svm.py package automatically loads the custom and RAD representations, performs cross validation
+(plots are saved in current directory) and tests to the test datasets. It also returns a confusion matrix.
+All of this is printed to the screen.
+
+Note: You must have a working version of libsvm in this directory! with the name 'libsvm'.
+I recommend these commands (starting from in this directory) to do this:
+git clone https://github.com/cjlin1/libsvm
+cd libsvm
+make
+cd python
+make

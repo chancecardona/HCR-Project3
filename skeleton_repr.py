@@ -1,6 +1,6 @@
 #!/usr/bin/python3.6
 
-import os, numpy as np
+import sys, os, numpy as np
 #import matplotlib.pyplot as plt            #Uncomment these if you have them and want more plotting features
 #from mpl_toolkits.mplot3d import Axes3D
 
@@ -22,14 +22,17 @@ def dirToRAD(directory, toFile):
         #print('Raw:', rawData)
         #print('RAD:', RADdata)
         label = int(file[1:3])
-        enumData = enumerate(getHistogram(data, file))
+        if len(sys.argv) > 1:
+            enumData = enumerate(getHistogram(data, file, int(sys.argv[1])))
+        else:
+            enumData = enumerate(getHistogram(data, file))
         fOut.write(str(label) + ' ')
         fOut.writelines([" %d:%s" % (index+1, elem) for index,elem in enumData])
         fOut.write('\n')
     fOut.close()
 
 #TODO fix histograms. filter noise? get bins correct. get np.hist and plt.hist to do same thing.
-def getHistogram(arr, fName, bins=10):
+def getHistogram(arr, fName, bins=15):
     dictJointName = {0:'Head to Hip',1:'RH-RF',2:'RF-LF',3:'LF-LH',4:'LH-Head'}
     fNum, typeNum, dNum = np.shape(arr)
     histArr = np.zeros((bins+bins)*dNum)
@@ -44,7 +47,7 @@ def getHistogram(arr, fName, bins=10):
             #ax.plot(cur)
 
             #2. Use this for np histograms
-            curHist, curBins = np.histogram(cur)
+            curHist, curBins = np.histogram(cur, bins=bins)
             #ax.bar(curBins[:-1] + np.diff(curBins)/2, curHist, np.diff(curBins))
 
             #3. Use this for matplotlib histograms
@@ -120,6 +123,7 @@ def rawToCust(arr):
 
 
 def getRawData(fileName):
+    """Extracts raw data from MSR Daily Activity dataset into an np array"""
     jointDict = {1:0,4:1,8:2,16:3,20:4,12:5, 3:6,6:7,10:8,14:9,18:10}    #HipCenter, Head, RightHand, RightFoot, LeftFoot, LeftHand. Values just for indexing.
     f = open(fileName, 'r')                                             #Shoulder center, LElbow, RElbow, lKnee, rKnee
     frameNum = getFrameNumber(fileName, 20) #gets number of frames. Assuming 20 lines per joint
@@ -153,14 +157,14 @@ def getFrameNumber(fileName, jointNumber):
 
 
 if __name__ == '__main__':
-    dirToRAD('dataset/train/', 'rad_d1')
+    dirToRAD('dataset/train/', 'rad_d2')
     #plt.show()
     print('Training RAD created.')
-    dirToRAD('dataset/test/', 'rad_d1.t')
+    dirToRAD('dataset/test/', 'rad_d2.t')
     print('Testing RAD created.')
-    dirToRAD('dataset/train/', 'cust_d1')
+    dirToRAD('dataset/train/', 'cust_d2')
     print('Training Cust created.')
-    dirToRAD('dataset/test/', 'cust_d1.y')
+    dirToRAD('dataset/test/', 'cust_d2.t')
     print('Testing Cust created.')
 
 
