@@ -20,6 +20,30 @@ The fit_svm.py package automatically loads the custom and RAD representations, p
 (plots are saved in current directory) and tests to the test datasets. It also returns a confusion matrix.
 All of this is printed to the screen.
 
+Best Results are (bins=20):
+RAD: 
+	Parameters: {'c': 0.03125, 'g': 2.0}
+	Confusion:
+	[[8. 0. 0. 0. 0. 0.]
+	 [0. 7. 0. 1. 0. 0.]
+	 [0. 3. 2. 0. 0. 3.]
+	 [0. 1. 0. 6. 0. 1.]
+	 [0. 2. 0. 1. 4. 1.]
+	 [0. 6. 0. 0. 0. 2.]]
+	Accuracy = 60.4167% (29/48) (classification)
+Custom:
+	Parameters: {'c': 0.03125, 'g': 2.0} 
+	Confusion:
+	[[7. 0. 1. 0. 0. 0.]
+	 [0. 2. 0. 0. 1. 5.]
+	 [0. 2. 3. 0. 1. 2.]
+	 [0. 0. 2. 6. 0. 0.]
+	 [1. 1. 0. 0. 3. 3.]
+	 [0. 2. 0. 0. 1. 5.]]
+	Accuracy = 54.1667% (26/48) (classification)
+
+
+
 Note: You must have a working version of libsvm in this directory! with the name 'libsvm'.
 I recommend these commands (starting from in this directory) to do this:
 git clone https://github.com/cjlin1/libsvm
