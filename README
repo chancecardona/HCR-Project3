@@ -1,10 +1,11 @@
 Code created by Chance Cardona.
 To run code simply type:
-    python skeleton_data.py
+    python3 skeleton_data.py
 
 The code should take care of the rest and use the training data directory provided
 in this package to generate rad_d1, rad_d1.t, cust_d1, and cust_d1.t frequency data
-in csv format. All histograms are generated with numpy's histogram with default
+in space separated format. Note python will generate empty files. Must run as python3.
+All histograms are generated with numpy's histogram with default
 settings. The cust format returns a 2x5 matrix for each sample as well, but measures
 different distances and angles I figured would be helpful such as hand to hand
 angle/distance, and extremety distance/angle relative to knees/elbows and hip/shoulder.

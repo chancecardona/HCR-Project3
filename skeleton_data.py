@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3.6
 
 import os, numpy as np
 #import matplotlib.pyplot as plt            #Uncomment these if you have them and want more plotting features
